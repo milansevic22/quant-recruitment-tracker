@@ -56,6 +56,22 @@
           </ol>
         </article>
 
+        <article class="card">
+          <h2>Review-Mode Interactions</h2>
+          <p>
+            The deployed dashboard is useful before Firebase credentials are
+            added. A reviewer can search jobs, filter by company, filter by role
+            type, filter by status, open external job links, refresh the data
+            source, and change a job status locally for the current browser
+            session.
+          </p>
+          <p>
+            Local status changes are intentionally not written to Firestore yet.
+            Persisting those changes should be added with authentication and
+            Firestore write rules in a later production iteration.
+          </p>
+        </article>
+
         <section class="grid">
           <article class="card">
             <h2>Frontend</h2>
@@ -123,7 +139,8 @@
             <p>
               The sample-data mode is intentional. It lets a reviewer open the
               app immediately without Firebase credentials, while still seeing
-              the full dashboard experience.
+              the dashboard experience, filters, external links, and local
+              review controls.
             </p>
           </article>
 

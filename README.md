@@ -157,6 +157,8 @@ Completed MVP:
 - Documentation mini-site was created before application code.
 - Dashboard renders summary cards, discovered roles, tracked companies, scan
   history, loading states, error states, and empty states.
+- Dashboard review mode supports search, company/type/status filters, external
+  job links, refresh, and local job-status updates.
 - Firebase client reads are used when browser-safe credentials are configured.
 - Sample fallback data renders when Firebase credentials are missing or reads
   fail.

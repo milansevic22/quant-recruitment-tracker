@@ -29,7 +29,25 @@ import {
 import { sampleDashboardData } from "@/lib/mock-data";
 import { StatusBadge } from "@/components/status-badge";
 import { SummaryCard } from "@/components/summary-card";
-import type { DashboardData, Job, ScanRun, TrackedCompany } from "@/types";
+import type {
+  DashboardData,
+  Job,
+  JobStatus,
+  RoleType,
+  ScanRun,
+  TrackedCompany,
+} from "@/types";
+
+const JOB_STATUSES: JobStatus[] = ["new", "seen", "applied", "ignored"];
+const ROLE_TYPES: RoleType[] = [
+  "graduate",
+  "internship",
+  "trading",
+  "quant",
+  "research",
+  "engineering",
+  "other",
+];
 
 function formatDateTime(value: string): string {
   if (!value) {
@@ -124,12 +142,18 @@ function LoadingState() {
   );
 }
 
-function JobsTable({ jobs }: { jobs: Job[] }) {
+function JobsTable({
+  jobs,
+  onStatusChange,
+}: {
+  jobs: Job[];
+  onStatusChange: (jobId: string, status: JobStatus) => void;
+}) {
   if (jobs.length === 0) {
     return (
       <EmptyState
-        title="No roles found"
-        detail="Seed Firestore or run a scan to populate discovered roles."
+        title="No matching roles"
+        detail="Adjust the search or filters, seed Firestore, or run a scan to populate discovered roles."
       />
     );
   }
@@ -165,7 +189,23 @@ function JobsTable({ jobs }: { jobs: Job[] }) {
               <td className="px-4 py-4 text-slate-700">{job.companyName}</td>
               <td className="px-4 py-4 text-slate-700">{formatRoleType(job.roleType)}</td>
               <td className="px-4 py-4">
-                <StatusBadge label={job.status} variant={job.status} />
+                <div className="flex flex-col items-start gap-2">
+                  <StatusBadge label={job.status} variant={job.status} />
+                  <select
+                    aria-label={`Update status for ${job.title}`}
+                    className="h-8 rounded-md border border-slate-300 bg-white px-2 text-xs font-medium text-slate-700 shadow-sm"
+                    onChange={(event) =>
+                      onStatusChange(job.id, event.target.value as JobStatus)
+                    }
+                    value={job.status}
+                  >
+                    {JOB_STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </td>
               <td className="px-4 py-4 text-slate-600">{formatDateTime(job.firstSeenAt)}</td>
               <td className="px-4 py-4">
@@ -184,6 +224,117 @@ function JobsTable({ jobs }: { jobs: Job[] }) {
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+interface JobFiltersProps {
+  companies: TrackedCompany[];
+  companyFilter: string;
+  resultCount: number;
+  roleFilter: string;
+  searchQuery: string;
+  statusFilter: string;
+  totalCount: number;
+  onCompanyFilterChange: (value: string) => void;
+  onReset: () => void;
+  onRoleFilterChange: (value: string) => void;
+  onSearchQueryChange: (value: string) => void;
+  onStatusFilterChange: (value: string) => void;
+}
+
+function JobFilters({
+  companies,
+  companyFilter,
+  resultCount,
+  roleFilter,
+  searchQuery,
+  statusFilter,
+  totalCount,
+  onCompanyFilterChange,
+  onReset,
+  onRoleFilterChange,
+  onSearchQueryChange,
+  onStatusFilterChange,
+}: JobFiltersProps) {
+  return (
+    <div className="border-b border-slate-200 bg-slate-50 px-4 py-4">
+      <div className="grid gap-3 lg:grid-cols-[minmax(220px,1.2fr)_repeat(3,minmax(140px,0.7fr))_auto]">
+        <label className="relative block">
+          <span className="sr-only">Search roles</span>
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+            aria-hidden="true"
+          />
+          <input
+            className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 text-sm text-slate-900 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            onChange={(event) => onSearchQueryChange(event.target.value)}
+            placeholder="Search title, company, keyword, location"
+            type="search"
+            value={searchQuery}
+          />
+        </label>
+
+        <label className="block">
+          <span className="sr-only">Filter by company</span>
+          <select
+            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            onChange={(event) => onCompanyFilterChange(event.target.value)}
+            value={companyFilter}
+          >
+            <option value="all">All companies</option>
+            {companies.map((company) => (
+              <option key={company.id} value={company.id}>
+                {company.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="block">
+          <span className="sr-only">Filter by role type</span>
+          <select
+            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            onChange={(event) => onRoleFilterChange(event.target.value)}
+            value={roleFilter}
+          >
+            <option value="all">All role types</option>
+            {ROLE_TYPES.map((roleType) => (
+              <option key={roleType} value={roleType}>
+                {formatRoleType(roleType)}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="block">
+          <span className="sr-only">Filter by status</span>
+          <select
+            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            onChange={(event) => onStatusFilterChange(event.target.value)}
+            value={statusFilter}
+          >
+            <option value="all">All statuses</option>
+            {JOB_STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <button
+          className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-100"
+          onClick={onReset}
+          type="button"
+        >
+          Reset
+        </button>
+      </div>
+      <p className="mt-3 text-xs text-slate-500">
+        Showing {resultCount} of {totalCount} roles. Status changes update this
+        review session locally.
+      </p>
     </div>
   );
 }
@@ -310,6 +461,10 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [companyFilter, setCompanyFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -343,10 +498,58 @@ export function Dashboard() {
   }, [loadData]);
 
   const jobs = useMemo(() => sortByNewest(data.jobs, "firstSeenAt"), [data.jobs]);
+  const filteredJobs = useMemo(() => {
+    const normalizedSearch = searchQuery.trim().toLowerCase();
+
+    return jobs.filter((job) => {
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        [
+          job.title,
+          job.companyName,
+          job.location,
+          job.roleType,
+          job.status,
+          ...job.keywordsMatched,
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(normalizedSearch);
+      const matchesCompany = companyFilter === "all" || job.companyId === companyFilter;
+      const matchesRole = roleFilter === "all" || job.roleType === roleFilter;
+      const matchesStatus = statusFilter === "all" || job.status === statusFilter;
+
+      return matchesSearch && matchesCompany && matchesRole && matchesStatus;
+    });
+  }, [companyFilter, jobs, roleFilter, searchQuery, statusFilter]);
   const scanRuns = useMemo(() => sortByNewest(data.scanRuns, "startedAt"), [data.scanRuns]);
   const activeCompanies = data.companies.filter((company) => company.active);
   const newJobs = jobs.filter((job) => job.status === "new");
   const latestScan = scanRuns[0];
+
+  const updateJobStatus = useCallback((jobId: string, status: JobStatus) => {
+    setData((currentData) => ({
+      ...currentData,
+      jobs: currentData.jobs.map((job) =>
+        job.id === jobId
+          ? {
+              ...job,
+              status,
+            }
+          : job,
+      ),
+    }));
+    setMessage(
+      "Status updated for this review session. Persisting status changes is the next authenticated Firebase write step.",
+    );
+  }, []);
+
+  const resetFilters = useCallback(() => {
+    setSearchQuery("");
+    setCompanyFilter("all");
+    setRoleFilter("all");
+    setStatusFilter("all");
+  }, []);
 
   if (isLoading) {
     return <LoadingState />;
@@ -431,10 +634,24 @@ export function Dashboard() {
               <p className="mt-1 text-sm text-slate-500">Newest records first</p>
             </div>
             <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-600">
-              {jobs.length}
+              {filteredJobs.length}
             </span>
           </div>
-          <JobsTable jobs={jobs} />
+          <JobFilters
+            companies={data.companies}
+            companyFilter={companyFilter}
+            onCompanyFilterChange={setCompanyFilter}
+            onReset={resetFilters}
+            onRoleFilterChange={setRoleFilter}
+            onSearchQueryChange={setSearchQuery}
+            onStatusFilterChange={setStatusFilter}
+            resultCount={filteredJobs.length}
+            roleFilter={roleFilter}
+            searchQuery={searchQuery}
+            statusFilter={statusFilter}
+            totalCount={jobs.length}
+          />
+          <JobsTable jobs={filteredJobs} onStatusChange={updateJobStatus} />
         </section>
 
         <div className="flex min-w-0 flex-col gap-6">

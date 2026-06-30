@@ -39,7 +39,7 @@
           <h2>What Worked</h2>
           <ul>
             <li>The documentation-first sequence kept product scope, architecture, and deployment expectations explicit.</li>
-            <li>The dashboard remains useful without Firebase credentials because it falls back to realistic sample data.</li>
+            <li>The dashboard remains useful without Firebase credentials because it falls back to realistic sample data and supports review-mode interactions.</li>
             <li>Admin-only writes are isolated behind protected Next.js routes.</li>
             <li>The scanner records failures per company, which keeps partial scans reviewable.</li>
           </ul>
@@ -52,6 +52,7 @@
             <li>Manual protected scan route instead of scheduled jobs by default.</li>
             <li>Simple keyword matching instead of ranking or NLP.</li>
             <li>Best-effort public-page parsing only.</li>
+            <li>Status changes are local in review mode until authenticated writes are added.</li>
           </ul>
         </article>
 

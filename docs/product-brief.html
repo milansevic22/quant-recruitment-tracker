@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product Brief - Quant Recruitment Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">Product Brief</p>
+        <h1>Quant Recruitment Tracker</h1>
+        <p class="lede">
+          A focused internal tool for tracking relevant early-career roles across
+          quant trading firms, hedge funds, and market makers.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html">Overview</a>
+          <a href="product-brief.html" aria-current="page">Product brief</a>
+          <a href="development-plan.html">Development plan</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="tech-docs.html">Tech docs</a>
+          <a href="firebase-data-model.html">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html">Deployment notes</a>
+          <a href="retrospective.html">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="card">
+          <h2>Problem</h2>
+          <p>
+            Quant recruitment roles appear on many company careers pages, often
+            with different naming conventions and posting systems. Manual checks
+            are repetitive, easy to miss, and hard to summarize for follow-up.
+          </p>
+        </article>
+
+        <section class="grid">
+          <article class="card">
+            <h2>Target User</h2>
+            <p>
+              A candidate, operator, or internal talent scout who wants one place
+              to review relevant quant, trading, research, and software roles.
+            </p>
+          </article>
+          <article class="card">
+            <h2>Personal Use Case</h2>
+            <p>
+              Track graduate and internship openings across a focused list of
+              firms and quickly decide which roles are new, relevant, applied,
+              ignored, or worth checking manually.
+            </p>
+          </article>
+        </section>
+
+        <article class="card">
+          <h2>Reusable Product Use Case</h2>
+          <p>
+            The same structure can support other recruitment watchlists by
+            changing the tracked companies and keyword set. The MVP keeps the
+            scanner generic enough for future career-track configurations.
+          </p>
+        </article>
+
+        <section class="grid">
+          <article class="card">
+            <h2>MVP Scope</h2>
+            <ul>
+              <li>Dashboard with summary cards, tracked companies, and jobs.</li>
+              <li>Firestore-backed company, job, and scan-run collections.</li>
+              <li>Protected seed route for realistic starting data.</li>
+              <li>Protected scan route for safe public-page checks.</li>
+              <li>Mock fallback data when Firebase is not configured.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h2>Out of Scope</h2>
+            <ul>
+              <li>Logged-in multi-user workflows.</li>
+              <li>Automated application submission.</li>
+              <li>Bypassing bot protection, CAPTCHAs, logins, or paywalls.</li>
+              <li>Complex ranking models or AI scoring.</li>
+              <li>Production alerting guarantees.</li>
+            </ul>
+          </article>
+        </section>
+
+        <article class="card">
+          <h2>User Workflow</h2>
+          <ol>
+            <li>Open the dashboard and review summary counts.</li>
+            <li>Scan discovered roles by firm, role type, status, and keyword.</li>
+            <li>Open external job links to verify fit.</li>
+            <li>Seed or scan through protected admin routes as needed.</li>
+            <li>Use scan-run records to understand recency and failures.</li>
+          </ol>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

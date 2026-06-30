@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Development Plan - Quant Recruitment Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">Development Plan</p>
+        <h1>Implementation Stages</h1>
+        <p class="lede">
+          A pragmatic sequence that starts with documentation, then builds the
+          smallest complete product loop.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html">Overview</a>
+          <a href="product-brief.html">Product brief</a>
+          <a href="development-plan.html" aria-current="page">Development plan</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="tech-docs.html">Tech docs</a>
+          <a href="firebase-data-model.html">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html">Deployment notes</a>
+          <a href="retrospective.html">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="card">
+          <h2>Build Sequence</h2>
+          <ol>
+            <li>Create HTML documentation and README.</li>
+            <li>Scaffold Next.js App Router with TypeScript and Tailwind.</li>
+            <li>Add Firebase client and Admin SDK setup.</li>
+            <li>Define TypeScript models and seed data.</li>
+            <li>Build the dashboard UI with fallback data.</li>
+            <li>Add protected seed and scan API routes.</li>
+            <li>Document environment variables and deployment steps.</li>
+            <li>Run linting and production build checks.</li>
+          </ol>
+        </article>
+
+        <section class="grid">
+          <article class="card">
+            <h2>Quality Checks</h2>
+            <ul>
+              <li>Dashboard loads without Firebase credentials.</li>
+              <li>Build completes without real secrets.</li>
+              <li>Admin routes reject missing or invalid secrets.</li>
+              <li>Scanner records errors without blocking the whole run.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h2>Decision Principles</h2>
+            <ul>
+              <li>Use Next.js routes rather than a separate backend.</li>
+              <li>Keep Firebase boundaries easy to replace or test.</li>
+              <li>Prefer readable code over clever abstractions.</li>
+              <li>Document limitations directly instead of hiding them.</li>
+            </ul>
+          </article>
+        </section>
+
+        <article class="callout warning">
+          <h2>Known Risk Areas</h2>
+          <p>
+            Careers pages frequently use third-party systems and client-rendered
+            listings. The MVP scanner should be treated as best-effort and paired
+            with manual review for high-value firms.
+          </p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

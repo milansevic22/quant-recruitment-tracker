@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quant Recruitment Tracker Docs</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">CrumbLabz Internal MVP</p>
+        <h1>Quant Recruitment Tracker</h1>
+        <p class="lede">
+          A Firebase-first internal dashboard for monitoring public careers pages
+          and surfacing graduate, internship, quant, trading, research, and
+          software engineering roles.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html" aria-current="page">Overview</a>
+          <a href="product-brief.html">Product brief</a>
+          <a href="development-plan.html">Development plan</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="tech-docs.html">Tech docs</a>
+          <a href="firebase-data-model.html">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html">Deployment notes</a>
+          <a href="retrospective.html">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="callout">
+          <h2>Project Goal</h2>
+          <p>
+            Build a polished internal MVP that turns a personal quant
+            recruitment workflow into a reusable product surface. The app should
+            be easy to review locally, ready for Firebase setup, and deployable
+            on Vercel without a custom backend.
+          </p>
+        </article>
+
+        <section class="status-grid" aria-label="MVP summary">
+          <div>
+            <span class="metric">10</span>
+            tracked firms in the initial seed set
+          </div>
+          <div>
+            <span class="metric">3</span>
+            Firestore collections for the core MVP
+          </div>
+          <div>
+            <span class="metric">2</span>
+            protected admin API routes
+          </div>
+          <div>
+            <span class="metric">1</span>
+            dashboard optimized for quick review
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="card">
+            <h2>What This MVP Demonstrates</h2>
+            <ul>
+              <li>Planning-first delivery with clear implementation stages.</li>
+              <li>Next.js App Router, TypeScript, Tailwind CSS, and Firebase.</li>
+              <li>Safe public careers-page monitoring without bypass behavior.</li>
+              <li>Dashboard states that remain reviewable without credentials.</li>
+              <li>Deployment notes and a candid retrospective.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h2>Intentional Simplicity</h2>
+            <ul>
+              <li>No custom Express backend.</li>
+              <li>No authentication until the product needs user accounts.</li>
+              <li>No PostgreSQL for this Firebase-first onboarding build.</li>
+              <li>No aggressive scraping or bot-protection workarounds.</li>
+            </ul>
+          </article>
+        </section>
+
+        <article class="card">
+          <h2>Primary Review Path</h2>
+          <ol>
+            <li>Read the product brief and architecture notes.</li>
+            <li>Run the dashboard locally and confirm fallback data renders.</li>
+            <li>Add Firebase credentials and seed the database.</li>
+            <li>Run a manual scan through the protected API route.</li>
+            <li>Deploy to Vercel after environment variables are configured.</li>
+          </ol>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Documentation created before application implementation, then updated after
+      build verification.
+    </footer>
+  </body>
+</html>

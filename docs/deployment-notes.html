@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deployment Notes - Quant Recruitment Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">Deployment Notes</p>
+        <h1>Vercel and Firebase Setup</h1>
+        <p class="lede">
+          The app is designed to deploy on Vercel with Firebase environment
+          variables and no separate server.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html">Overview</a>
+          <a href="product-brief.html">Product brief</a>
+          <a href="development-plan.html">Development plan</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="tech-docs.html">Tech docs</a>
+          <a href="firebase-data-model.html">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html" aria-current="page">Deployment notes</a>
+          <a href="retrospective.html">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="card">
+          <h2>Local Setup</h2>
+          <ol>
+            <li>Install dependencies with <code>npm install</code> or <code>pnpm install</code>.</li>
+            <li>Copy <code>.env.example</code> to <code>.env.local</code>.</li>
+            <li>Add Firebase browser and Admin SDK variables.</li>
+            <li>Run <code>npm run dev</code> or <code>pnpm dev</code> and open the local app URL.</li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <h2>Required Environment Variables</h2>
+          <pre><code>NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+ADMIN_API_SECRET=</code></pre>
+        </article>
+
+        <article class="card">
+          <h2>Vercel Setup</h2>
+          <ol>
+            <li>Create a Vercel project from the GitHub repository.</li>
+            <li>Add all required environment variables in Vercel settings.</li>
+            <li>Deploy with the default Next.js build settings.</li>
+            <li>Call the protected seed route after the first deployment.</li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <h2>Protected Route Calls</h2>
+          <p>Local seed:</p>
+          <pre><code>curl -X POST http://localhost:3000/api/seed \
+  -H "x-admin-secret: your-secret"</code></pre>
+          <p>Local scan:</p>
+          <pre><code>curl -X POST http://localhost:3000/api/scan \
+  -H "x-admin-secret: your-secret"</code></pre>
+          <p>Production calls use the same headers with the Vercel domain.</p>
+          <pre><code>curl -X POST https://your-domain.vercel.app/api/seed \
+  -H "x-admin-secret: your-secret"</code></pre>
+        </article>
+
+        <article class="callout warning">
+          <h2>Secrets</h2>
+          <p>
+            The Firebase private key and admin secret must never be committed.
+            Browser-safe Firebase config values use <code>NEXT_PUBLIC_</code>.
+            Admin-only values do not.
+          </p>
+        </article>
+
+        <article class="callout">
+          <h2>Optional Cron</h2>
+          <p>
+            Vercel Cron can call <code>/api/scan</code> later, but the MVP leaves
+            scanning as a manual protected action so credentials and behavior can
+            be reviewed first.
+          </p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

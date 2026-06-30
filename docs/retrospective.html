@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Retrospective - Quant Recruitment Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">Retrospective</p>
+        <h1>Tradeoffs and Next Steps</h1>
+        <p class="lede">
+          A candid record of what was intentionally simple, what worked, and
+          what should improve after the MVP.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html">Overview</a>
+          <a href="product-brief.html">Product brief</a>
+          <a href="development-plan.html">Development plan</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="tech-docs.html">Tech docs</a>
+          <a href="firebase-data-model.html">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html">Deployment notes</a>
+          <a href="retrospective.html" aria-current="page">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="card">
+          <h2>What Worked</h2>
+          <ul>
+            <li>The documentation-first sequence kept product scope, architecture, and deployment expectations explicit.</li>
+            <li>The dashboard remains useful without Firebase credentials because it falls back to realistic sample data.</li>
+            <li>Admin-only writes are isolated behind protected Next.js routes.</li>
+            <li>The scanner records failures per company, which keeps partial scans reviewable.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Intentionally Simple</h2>
+          <ul>
+            <li>Single dashboard page rather than a multi-route admin system.</li>
+            <li>Manual protected scan route instead of scheduled jobs by default.</li>
+            <li>Simple keyword matching instead of ranking or NLP.</li>
+            <li>Best-effort public-page parsing only.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Expected Limitations</h2>
+          <ul>
+            <li>Some careers pages use dynamic rendering or third-party boards.</li>
+            <li>Locations may be incomplete when not visible in link text.</li>
+            <li>Manual verification remains necessary before applying.</li>
+            <li>Notification support is left for a later iteration.</li>
+            <li>Firestore rules still need to be configured for the chosen review or production access model.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Next Improvements</h2>
+          <ul>
+            <li>Add Vercel Cron after scanner behavior is reviewed.</li>
+            <li>Add Resend alerts for newly discovered jobs.</li>
+            <li>Add authenticated status updates for applied and ignored jobs.</li>
+            <li>Add per-company adapters for high-value job boards that expose stable APIs.</li>
+            <li>Add filters for role type, location, company, and status.</li>
+          </ul>
+        </article>
+
+        <article class="callout">
+          <h2>Final Status</h2>
+          <p>
+            The MVP builds successfully and is ready for Firebase credentials,
+            seeding, manual scans, and Vercel deployment.
+          </p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

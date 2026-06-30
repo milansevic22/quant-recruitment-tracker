@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Architecture - Quant Recruitment Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">Architecture</p>
+        <h1>Firebase-First MVP</h1>
+        <p class="lede">
+          The app uses Next.js for the UI and server routes, Firebase Firestore
+          for persistence, and Vercel for deployment.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html">Overview</a>
+          <a href="product-brief.html">Product brief</a>
+          <a href="development-plan.html">Development plan</a>
+          <a href="architecture.html" aria-current="page">Architecture</a>
+          <a href="tech-docs.html">Tech docs</a>
+          <a href="firebase-data-model.html">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html">Deployment notes</a>
+          <a href="retrospective.html">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="card">
+          <h2>System Overview</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Responsibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Next.js App Router</td>
+                <td>Dashboard page, API routes, Vercel-compatible runtime.</td>
+              </tr>
+              <tr>
+                <td>React components</td>
+                <td>Summary cards, jobs table, companies list, status states.</td>
+              </tr>
+              <tr>
+                <td>Firebase client SDK</td>
+                <td>Browser-safe Firestore reads for dashboard data.</td>
+              </tr>
+              <tr>
+                <td>Firebase Admin SDK</td>
+                <td>Privileged server-side writes for seed and scan routes.</td>
+              </tr>
+              <tr>
+                <td>Scanner module</td>
+                <td>Gentle public-page fetches, keyword matching, deduping.</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2>Runtime Boundaries</h2>
+          <ul>
+            <li>The browser never receives Firebase private key material.</li>
+            <li>Admin routes require <code>ADMIN_API_SECRET</code>.</li>
+            <li>Dashboard reads fall back to sample data when Firebase is absent.</li>
+            <li>Scanner failures are saved in scan-run records for review.</li>
+          </ul>
+        </article>
+
+        <article class="callout">
+          <h2>Future Architecture Extension</h2>
+          <p>
+            Vercel Cron can call the scan route on a schedule once production
+            environment variables are configured. Resend can later notify users
+            when new jobs are added, but it is intentionally outside the core
+            MVP loop.
+          </p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

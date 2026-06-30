@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Firebase Data Model - Quant Recruitment Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">Firebase Data Model</p>
+        <h1>Firestore Collections</h1>
+        <p class="lede">
+          Three simple collections cover the MVP: tracked companies, discovered
+          jobs, and scan-run history.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html">Overview</a>
+          <a href="product-brief.html">Product brief</a>
+          <a href="development-plan.html">Development plan</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="tech-docs.html">Tech docs</a>
+          <a href="firebase-data-model.html" aria-current="page">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html">Deployment notes</a>
+          <a href="retrospective.html">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="card">
+          <h2><code>companies</code></h2>
+          <table>
+            <tbody>
+              <tr><th>Field</th><th>Description</th></tr>
+              <tr><td><code>id</code></td><td>Stable company identifier.</td></tr>
+              <tr><td><code>name</code></td><td>Company display name.</td></tr>
+              <tr><td><code>careersUrl</code></td><td>Public careers page to scan.</td></tr>
+              <tr><td><code>keywords</code></td><td>Role keywords used for matching.</td></tr>
+              <tr><td><code>active</code></td><td>Whether the scanner should include it.</td></tr>
+              <tr><td><code>createdAt</code></td><td>Creation timestamp.</td></tr>
+              <tr><td><code>updatedAt</code></td><td>Last updated timestamp.</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2><code>jobs</code></h2>
+          <table>
+            <tbody>
+              <tr><th>Field</th><th>Description</th></tr>
+              <tr><td><code>id</code></td><td>Deterministic job identifier.</td></tr>
+              <tr><td><code>companyId</code></td><td>Reference to the tracked company.</td></tr>
+              <tr><td><code>companyName</code></td><td>Denormalized company name.</td></tr>
+              <tr><td><code>title</code></td><td>Discovered role title.</td></tr>
+              <tr><td><code>location</code></td><td>Best-known location or remote note.</td></tr>
+              <tr><td><code>url</code></td><td>External job posting URL.</td></tr>
+              <tr><td><code>sourceUrl</code></td><td>Careers page where the role was found.</td></tr>
+              <tr><td><code>firstSeenAt</code></td><td>First detection timestamp.</td></tr>
+              <tr><td><code>lastSeenAt</code></td><td>Most recent detection timestamp.</td></tr>
+              <tr><td><code>status</code></td><td><code>new</code>, <code>seen</code>, <code>applied</code>, or <code>ignored</code>.</td></tr>
+              <tr><td><code>keywordsMatched</code></td><td>Keyword matches from the title or link text.</td></tr>
+              <tr><td><code>roleType</code></td><td>Graduate, internship, quant, trading, research, engineering, or other.</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2><code>scanRuns</code></h2>
+          <table>
+            <tbody>
+              <tr><th>Field</th><th>Description</th></tr>
+              <tr><td><code>id</code></td><td>Scan-run identifier.</td></tr>
+              <tr><td><code>startedAt</code></td><td>Scan start time.</td></tr>
+              <tr><td><code>completedAt</code></td><td>Scan completion time.</td></tr>
+              <tr><td><code>status</code></td><td>Completed, partial, or failed.</td></tr>
+              <tr><td><code>companiesChecked</code></td><td>Number of companies attempted.</td></tr>
+              <tr><td><code>jobsFound</code></td><td>Total matching jobs found during the scan.</td></tr>
+              <tr><td><code>newJobsAdded</code></td><td>New unique jobs inserted.</td></tr>
+              <tr><td><code>errors</code></td><td>Per-company scanner errors.</td></tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

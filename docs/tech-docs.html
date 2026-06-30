@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tech Docs - Quant Recruitment Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <p class="eyebrow">Tech Docs</p>
+        <h1>How The App Works</h1>
+        <p class="lede">
+          A plain-English technical walkthrough of the dashboard, Firebase
+          data flow, protected API routes, and careers-page scanner.
+        </p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <strong>Documentation</strong>
+        <nav aria-label="Documentation navigation">
+          <a href="index.html">Overview</a>
+          <a href="product-brief.html">Product brief</a>
+          <a href="development-plan.html">Development plan</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="tech-docs.html" aria-current="page">Tech docs</a>
+          <a href="firebase-data-model.html">Firebase data model</a>
+          <a href="build-log.html">Build log</a>
+          <a href="deployment-notes.html">Deployment notes</a>
+          <a href="retrospective.html">Retrospective</a>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <article class="callout">
+          <h2>One-Sentence Summary</h2>
+          <p>
+            The app is a Next.js dashboard that reads recruitment data from
+            Firestore when Firebase is configured, falls back to sample data when
+            it is not, and uses protected server routes to seed data or scan
+            public careers pages.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Request Flow</h2>
+          <ol>
+            <li>A user opens the dashboard at <code>/</code>.</li>
+            <li>The React dashboard checks whether browser-safe Firebase config exists.</li>
+            <li>If config exists, it reads <code>companies</code>, <code>jobs</code>, and <code>scanRuns</code> from Firestore.</li>
+            <li>If config is missing or the read fails, it displays realistic sample data instead of crashing.</li>
+            <li>The dashboard renders summary cards, the discovered jobs table, tracked companies, and the latest scan result.</li>
+          </ol>
+        </article>
+
+        <section class="grid">
+          <article class="card">
+            <h2>Frontend</h2>
+            <ul>
+              <li><code>app/page.tsx</code> renders the dashboard.</li>
+              <li><code>components/dashboard.tsx</code> owns loading, fallback, error, and display states.</li>
+              <li><code>components/summary-card.tsx</code> renders the metric cards.</li>
+              <li><code>components/status-badge.tsx</code> renders consistent status labels.</li>
+              <li>Tailwind CSS provides the responsive internal-tool layout.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h2>Firebase</h2>
+            <ul>
+              <li><code>lib/firebase/client.ts</code> initializes the browser-safe Firebase client.</li>
+              <li><code>lib/firebase/admin.ts</code> initializes the server-only Firebase Admin SDK.</li>
+              <li>Client reads use public <code>NEXT_PUBLIC_FIREBASE_*</code> values.</li>
+              <li>Server writes use private Firebase service-account variables.</li>
+              <li>No real secrets are committed to the repository.</li>
+            </ul>
+          </article>
+        </section>
+
+        <article class="card">
+          <h2>Admin Routes</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Route</th>
+                <th>Purpose</th>
+                <th>Protection</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>POST /api/seed</code></td>
+                <td>Writes initial companies and sample jobs into Firestore.</td>
+                <td>Requires <code>x-admin-secret</code> matching <code>ADMIN_API_SECRET</code>.</td>
+              </tr>
+              <tr>
+                <td><code>POST /api/scan</code></td>
+                <td>Runs the public careers-page scanner and stores scan results.</td>
+                <td>Requires <code>x-admin-secret</code> matching <code>ADMIN_API_SECRET</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2>Scanner Behavior</h2>
+          <ol>
+            <li>The scanner loads active tracked companies from Firestore.</li>
+            <li>If Firestore has no company records yet, it uses the initial company list.</li>
+            <li>For each company, it makes one gentle public request to the careers URL.</li>
+            <li>It parses links from the HTML and checks for role keywords such as <code>quant</code>, <code>trading</code>, <code>intern</code>, <code>graduate</code>, <code>research</code>, and <code>software</code>.</li>
+            <li>It creates job records with deterministic IDs so duplicate title and URL combinations are avoided.</li>
+            <li>It stores a <code>scanRuns</code> record with companies checked, jobs found, new jobs added, and errors.</li>
+          </ol>
+        </article>
+
+        <section class="grid">
+          <article class="card">
+            <h2>Fallback Mode</h2>
+            <p>
+              The sample-data mode is intentional. It lets a reviewer open the
+              app immediately without Firebase credentials, while still seeing
+              the full dashboard experience.
+            </p>
+          </article>
+
+          <article class="card">
+            <h2>Deployment Mode</h2>
+            <p>
+              In production, Vercel hosts the Next.js app. Firebase stores the
+              recruitment data. Admin routes run on the server and can be called
+              manually or later by Vercel Cron.
+            </p>
+          </article>
+        </section>
+
+        <article class="callout warning">
+          <h2>Safety Boundaries</h2>
+          <p>
+            The scanner does not bypass logins, bot protection, CAPTCHAs,
+            paywalls, or website restrictions. If a careers page cannot be read
+            cleanly, the scanner records an error and moves on.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>What To Say In The Presentation</h2>
+          <p>
+            This page is the best place to explain the technical side. Say that
+            the frontend is reviewable immediately with sample data, Firebase is
+            the intended source of truth, and protected server routes handle the
+            sensitive write operations.
+          </p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

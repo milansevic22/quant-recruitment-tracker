@@ -84,6 +84,8 @@ Optional future notification support:
 
 ```bash
 RESEND_API_KEY=
+ALERT_EMAIL_TO=
+ALERT_EMAIL_FROM=
 ```
 
 ## Firebase Setup
@@ -180,6 +182,10 @@ Completed MVP:
   scanner safety, and a visible fetch-match-record pipeline.
 - Review-mode scan button adds newly detected roles locally so the deployed app
   demonstrates the automated monitoring loop without Firebase credentials.
+- Production scanner includes verified Greenhouse API adapters for Jane Street
+  and Optiver US before falling back to public HTML parsing for other firms.
+- Optional Resend alerts email newly inserted jobs when `RESEND_API_KEY` and
+  `ALERT_EMAIL_TO` are configured.
 - Firebase client reads are used when browser-safe credentials are configured.
 - Sample fallback data renders when Firebase credentials are missing or reads
   fail.
@@ -205,12 +211,11 @@ a machine where npm is installed.
 - It does not bypass bot protection, logins, CAPTCHAs, paywalls, or site
   restrictions.
 - Dynamic careers pages and third-party job boards may require manual review.
-- Email alerts are optional future work.
+- Email alerts require a Resend API key and a valid sender address.
 
 ## Future Improvements
 
 - Review Vercel Cron logs after enabling scheduled scans.
-- Add Resend alerts for newly discovered jobs.
 - Add authenticated status updates for applied or ignored roles.
 - Add per-company scanner adapters for high-value sources.
 - Add richer filtering, saved views, and export support.

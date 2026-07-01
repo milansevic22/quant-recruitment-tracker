@@ -11,3 +11,4 @@ yarn-error.log*
 pnpm-debug.log*
 firebase-debug.log*
 *.tsbuildinfo
+work/

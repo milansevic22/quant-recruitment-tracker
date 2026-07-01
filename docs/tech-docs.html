@@ -106,6 +106,28 @@
           </ol>
         </article>
 
+        <article class="card">
+          <h2>Verified ATS Sources</h2>
+          <p>
+            The scanner now includes first-class Greenhouse adapters for Jane
+            Street and Optiver US. Those endpoints return public JSON job data,
+            which is more reliable than scraping JavaScript-rendered careers
+            pages. The scanner still falls back to safe HTML parsing for firms
+            where no stable public ATS feed has been added yet.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Email Alerts</h2>
+          <p>
+            Newly inserted jobs can trigger a Resend email alert. This is enabled
+            by setting <code>RESEND_API_KEY</code>, <code>ALERT_EMAIL_TO</code>,
+            and optionally <code>ALERT_EMAIL_FROM</code> in Vercel. If those
+            variables are missing, scans still run and persist jobs, but no email
+            is sent.
+          </p>
+        </article>
+
         <section class="grid">
           <article class="card">
             <h2>Frontend</h2>
@@ -160,10 +182,12 @@
           <ol>
             <li>The scanner loads active tracked companies from Firestore.</li>
             <li>If Firestore has no company records yet, it uses the initial company list.</li>
-            <li>For each company, it makes one gentle public request to the careers URL.</li>
+            <li>For verified ATS sources, it reads public JSON from Greenhouse.</li>
+            <li>For other companies, it makes one gentle public request to the careers URL.</li>
             <li>It parses links from the HTML and checks for role keywords such as <code>quant</code>, <code>trading</code>, <code>intern</code>, <code>graduate</code>, <code>research</code>, and <code>software</code>.</li>
             <li>It creates job records with deterministic IDs so duplicate title and URL combinations are avoided.</li>
             <li>It stores a <code>scanRuns</code> record with companies checked, jobs found, new jobs added, and errors.</li>
+            <li>If Resend is configured, it emails newly inserted jobs.</li>
           </ol>
         </article>
 

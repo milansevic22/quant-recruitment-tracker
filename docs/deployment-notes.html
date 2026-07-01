@@ -58,7 +58,10 @@ FIREBASE_PROJECT_ID=
 FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=
 ADMIN_API_SECRET=
-CRON_SECRET=</code></pre>
+CRON_SECRET=
+RESEND_API_KEY=
+ALERT_EMAIL_TO=
+ALERT_EMAIL_FROM=</code></pre>
         </article>
 
         <article class="card">
@@ -98,6 +101,16 @@ CRON_SECRET=</code></pre>
             <li>Open the Vercel project's Cron Jobs settings to confirm the job is active.</li>
             <li>Use Vercel function logs to review scan results and errors.</li>
           </ol>
+        </article>
+
+        <article class="card">
+          <h2>Email Alerts</h2>
+          <p>
+            Resend alerts are optional. To enable them, add
+            <code>RESEND_API_KEY</code> and <code>ALERT_EMAIL_TO</code> in
+            Vercel, then redeploy. <code>ALERT_EMAIL_FROM</code> can be set if a
+            verified sender domain is available.
+          </p>
         </article>
 
         <article class="callout warning">

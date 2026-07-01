@@ -15,11 +15,9 @@ export function verifyAdminRequest(request: Request): AdminAuthResult {
     };
   }
 
-  const requestUrl = new URL(request.url);
   const providedSecret =
     request.headers.get("x-admin-secret") ??
-    request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ??
-    requestUrl.searchParams.get("secret");
+    request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
 
   if (providedSecret !== expectedSecret) {
     return {

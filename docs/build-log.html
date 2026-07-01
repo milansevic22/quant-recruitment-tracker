@@ -48,6 +48,10 @@
             <li>Add an automation center with watched source count, indexed posting count, scan cadence, scanner safety, and pipeline visibility.</li>
             <li>Add protected <code>/api/seed</code> and <code>/api/scan</code> routes.</li>
             <li>Add secured <code>/api/cron/scan</code> route and <code>vercel.json</code> daily cron configuration.</li>
+            <li>Add verified Greenhouse API adapters for Jane Street and Optiver US.</li>
+            <li>Add optional Resend email alert support for newly inserted jobs.</li>
+            <li>Remove query-string admin secret support and require headers.</li>
+            <li>Add checked-in <code>firestore.rules</code> file.</li>
             <li>Add a safe careers-page scanner using gentle public-page fetches and keyword parsing.</li>
             <li>Update documentation after implementation and verification.</li>
           </ol>
@@ -64,6 +68,7 @@
               <li><code>lib/scanner/scanner.ts</code> - safe public careers-page scanning.</li>
               <li><code>app/api/seed/route.ts</code> and <code>app/api/scan/route.ts</code> - protected admin routes.</li>
               <li><code>app/api/cron/scan/route.ts</code> and <code>vercel.json</code> - scheduled scan support.</li>
+              <li><code>firestore.rules</code> - read-only client rules for dashboard collections.</li>
             </ul>
           </article>
 

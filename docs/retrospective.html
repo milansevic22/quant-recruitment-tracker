@@ -43,6 +43,8 @@
             <li>The automation center makes the monitoring loop visible to a non-technical reviewer.</li>
             <li>Admin-only writes are isolated behind protected Next.js routes.</li>
             <li>Scheduled scanning is wired through a secured Vercel Cron route.</li>
+            <li>Verified Greenhouse feeds reduce risk for Jane Street and Optiver US versus generic HTML scraping.</li>
+            <li>Optional Resend alerts close the notification path once email credentials are configured.</li>
             <li>The scanner records failures per company, which keeps partial scans reviewable.</li>
           </ul>
         </article>
@@ -56,6 +58,7 @@
             <li>Best-effort public-page parsing only.</li>
             <li>Status changes are local in review mode until authenticated writes are added.</li>
             <li>The review scan is intentionally local sample behavior until Firebase credentials are configured.</li>
+            <li>Email alerts depend on Resend account setup and sender verification.</li>
           </ul>
         </article>
 
@@ -74,7 +77,7 @@
           <h2>Next Improvements</h2>
           <ul>
             <li>Review Vercel Cron logs after the first scheduled production scan.</li>
-            <li>Add Resend alerts for newly discovered jobs.</li>
+            <li>Send a live test email after adding Resend credentials.</li>
             <li>Add authenticated status updates for applied and ignored jobs.</li>
             <li>Persist the review-scan workflow through Firestore once Firebase credentials and rules are installed.</li>
             <li>Add per-company adapters for high-value job boards that expose stable APIs.</li>

@@ -57,7 +57,8 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 FIREBASE_PROJECT_ID=
 FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=
-ADMIN_API_SECRET=</code></pre>
+ADMIN_API_SECRET=
+CRON_SECRET=</code></pre>
         </article>
 
         <article class="card">
@@ -83,6 +84,22 @@ ADMIN_API_SECRET=</code></pre>
   -H "x-admin-secret: your-secret"</code></pre>
         </article>
 
+        <article class="card">
+          <h2>Automatic Scanning</h2>
+          <p>
+            The project includes <code>vercel.json</code> with a daily scheduled
+            scan at <code>0 13 * * *</code>, which runs at 13:00 UTC. Vercel
+            invokes <code>/api/cron/scan</code> with a <code>GET</code> request.
+          </p>
+          <ol>
+            <li>Add <code>CRON_SECRET</code> in Vercel environment variables.</li>
+            <li>Add Firebase Admin variables so the scanner can write to Firestore.</li>
+            <li>Redeploy after adding <code>vercel.json</code> and environment variables.</li>
+            <li>Open the Vercel project's Cron Jobs settings to confirm the job is active.</li>
+            <li>Use Vercel function logs to review scan results and errors.</li>
+          </ol>
+        </article>
+
         <article class="callout warning">
           <h2>Secrets</h2>
           <p>
@@ -93,11 +110,11 @@ ADMIN_API_SECRET=</code></pre>
         </article>
 
         <article class="callout">
-          <h2>Optional Cron</h2>
+          <h2>Cron Status</h2>
           <p>
-            Vercel Cron can call <code>/api/scan</code> later, but the MVP leaves
-            scanning as a manual protected action so credentials and behavior can
-            be reviewed first.
+            Cron configuration is included. It becomes live after the project is
+            redeployed on Vercel with <code>CRON_SECRET</code> and Firebase
+            credentials configured.
           </p>
         </article>
       </section>

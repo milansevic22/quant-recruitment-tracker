@@ -77,6 +77,7 @@ FIREBASE_PROJECT_ID=
 FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=
 ADMIN_API_SECRET=
+CRON_SECRET=
 ```
 
 Optional future notification support:
@@ -129,6 +130,22 @@ curl -X POST https://your-domain.vercel.app/api/scan \
   -H "x-admin-secret: your-secret"
 ```
 
+Scheduled scans are handled by Vercel Cron:
+
+```text
+GET /api/cron/scan
+```
+
+The cron route requires:
+
+```bash
+CRON_SECRET=
+```
+
+Vercel automatically sends `Authorization: Bearer $CRON_SECRET` when invoking
+cron jobs. The included `vercel.json` runs the scanner daily at `0 13 * * *`
+in UTC.
+
 ## Deployment Notes
 
 Deploy the app to Vercel with the default Next.js settings. Add the same
@@ -159,6 +176,10 @@ Completed MVP:
   history, loading states, error states, and empty states.
 - Dashboard review mode supports search, company/type/status filters, external
   job links, refresh, and local job-status updates.
+- Automation center shows watched sources, indexed postings, scan cadence,
+  scanner safety, and a visible fetch-match-record pipeline.
+- Review-mode scan button adds newly detected roles locally so the deployed app
+  demonstrates the automated monitoring loop without Firebase credentials.
 - Firebase client reads are used when browser-safe credentials are configured.
 - Sample fallback data renders when Firebase credentials are missing or reads
   fail.
@@ -188,7 +209,7 @@ a machine where npm is installed.
 
 ## Future Improvements
 
-- Add Vercel Cron for scheduled scans.
+- Review Vercel Cron logs after enabling scheduled scans.
 - Add Resend alerts for newly discovered jobs.
 - Add authenticated status updates for applied or ignored roles.
 - Add per-company scanner adapters for high-value sources.

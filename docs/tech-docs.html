@@ -62,14 +62,48 @@
             The deployed dashboard is useful before Firebase credentials are
             added. A reviewer can search jobs, filter by company, filter by role
             type, filter by status, open external job links, refresh the data
-            source, and change a job status locally for the current browser
-            session.
+            source, run a review scan, and change a job status locally for the
+            current browser session.
           </p>
           <p>
             Local status changes are intentionally not written to Firestore yet.
             Persisting those changes should be added with authentication and
             Firestore write rules in a later production iteration.
           </p>
+        </article>
+
+        <article class="card">
+          <h2>Automation Center</h2>
+          <p>
+            The dashboard includes an automation panel that shows watched
+            sources, indexed postings, intended scan cadence, scanner health,
+            and the fetch-match-record pipeline. In review mode, the
+            <code>Run review scan</code> button adds newly detected sample roles
+            locally so the reviewer can see the monitoring loop without needing
+            live Firebase credentials.
+          </p>
+          <p>
+            In production mode, the same concept maps to the protected
+            <code>/api/scan</code> route, Firestore writes, and optional Vercel
+            Cron scheduling.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Live Scheduled Scanning</h2>
+          <p>
+            The repository includes <code>vercel.json</code> with a daily cron
+            schedule for <code>/api/cron/scan</code>. When deployed on Vercel,
+            that route can run the same scanner automatically and write new jobs
+            into Firestore.
+          </p>
+          <ol>
+            <li>Vercel Cron sends a scheduled <code>GET</code> request to <code>/api/cron/scan</code>.</li>
+            <li>The route verifies the <code>Authorization</code> header against <code>CRON_SECRET</code>.</li>
+            <li>The route initializes Firebase Admin using server-only credentials.</li>
+            <li>The scanner checks active public careers pages, extracts matching roles, deduplicates jobs, and writes scan results to Firestore.</li>
+            <li>The dashboard reads Firestore and updates with the latest jobs and scan-run history.</li>
+          </ol>
         </article>
 
         <section class="grid">
@@ -140,7 +174,9 @@
               The sample-data mode is intentional. It lets a reviewer open the
               app immediately without Firebase credentials, while still seeing
               the dashboard experience, filters, external links, and local
-              review controls.
+              review controls. The sample index now includes a broader set of
+              quant firms and hedge funds so the product feels closer to a real
+              monitoring workflow.
             </p>
           </article>
 
@@ -149,7 +185,7 @@
             <p>
               In production, Vercel hosts the Next.js app. Firebase stores the
               recruitment data. Admin routes run on the server and can be called
-              manually or later by Vercel Cron.
+              manually or by Vercel Cron.
             </p>
           </article>
         </section>

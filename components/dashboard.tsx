@@ -1,14 +1,19 @@
 "use client";
 
 import {
+  Activity,
   AlertCircle,
   ArrowUpRight,
   BriefcaseBusiness,
   Building2,
+  CalendarClock,
   Clock3,
   Database,
+  Play,
+  Radar,
   RefreshCw,
   Search,
+  ShieldCheck,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -26,7 +31,7 @@ import {
   normalizeJob,
   normalizeScanRun,
 } from "@/lib/firestore-converters";
-import { sampleDashboardData } from "@/lib/mock-data";
+import { reviewScanJobs, sampleDashboardData } from "@/lib/mock-data";
 import { StatusBadge } from "@/components/status-badge";
 import { SummaryCard } from "@/components/summary-card";
 import type {
@@ -456,6 +461,124 @@ function ScanRunPanel({ scanRuns }: { scanRuns: ScanRun[] }) {
   );
 }
 
+function AutomationPanel({
+  companies,
+  jobs,
+  latestScan,
+  onRunReviewScan,
+}: {
+  companies: TrackedCompany[];
+  jobs: Job[];
+  latestScan?: ScanRun;
+  onRunReviewScan: () => void;
+}) {
+  const activeCompanies = companies.filter((company) => company.active);
+  const uniqueLocations = new Set(jobs.map((job) => job.location).filter(Boolean));
+  const latestErrors = latestScan?.errors.length ?? 0;
+
+  return (
+    <section className="rounded-lg border border-slate-200 bg-white shadow-soft">
+      <div className="flex flex-col gap-4 border-b border-slate-200 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-base font-semibold text-slate-950">Automation center</h2>
+            <span className="rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700">
+              Vercel Cron ready
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-slate-500">
+            Safe public-page monitoring with review-mode scan simulation.
+          </p>
+        </div>
+        <button
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-teal-700 bg-teal-700 px-3 text-sm font-semibold text-white shadow-soft hover:bg-teal-800"
+          onClick={onRunReviewScan}
+          type="button"
+        >
+          <Play className="h-4 w-4" aria-hidden="true" />
+          Run review scan
+        </button>
+      </div>
+
+      <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <Radar className="h-4 w-4 text-teal-700" aria-hidden="true" />
+            Sources watched
+          </div>
+          <p className="mt-3 text-2xl font-semibold text-slate-950">
+            {activeCompanies.length}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">Public careers pages in scope</p>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <BriefcaseBusiness className="h-4 w-4 text-teal-700" aria-hidden="true" />
+            Postings indexed
+          </div>
+          <p className="mt-3 text-2xl font-semibold text-slate-950">{jobs.length}</p>
+          <p className="mt-1 text-xs text-slate-500">Current dashboard records</p>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <CalendarClock className="h-4 w-4 text-teal-700" aria-hidden="true" />
+            Scan cadence
+          </div>
+          <p className="mt-3 text-2xl font-semibold text-slate-950">Daily</p>
+          <p className="mt-1 text-xs text-slate-500">Manual now, Cron-ready later</p>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <ShieldCheck className="h-4 w-4 text-teal-700" aria-hidden="true" />
+            Safe scanner
+          </div>
+          <p className="mt-3 text-2xl font-semibold text-slate-950">
+            {latestErrors === 0 ? "Clean" : `${latestErrors} note${latestErrors > 1 ? "s" : ""}`}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">No bypassing or login scraping</p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 border-t border-slate-200 px-5 py-4 lg:grid-cols-[1fr_1fr]">
+        <div>
+          <p className="text-sm font-semibold text-slate-800">Pipeline</p>
+          <div className="mt-3 grid gap-2 text-sm text-slate-600 sm:grid-cols-3">
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <span className="block text-xs font-semibold uppercase text-slate-400">
+                1. Fetch
+              </span>
+              Public careers pages
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <span className="block text-xs font-semibold uppercase text-slate-400">
+                2. Match
+              </span>
+              Quant and early-career keywords
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <span className="block text-xs font-semibold uppercase text-slate-400">
+                3. Record
+              </span>
+              Firestore jobs and scan runs
+            </div>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-slate-800">Coverage snapshot</p>
+          <p className="mt-3 text-sm text-slate-600">
+            Current sample index spans {uniqueLocations.size} location groups and{" "}
+            {new Set(jobs.map((job) => job.roleType)).size} role categories. The review
+            scan adds newly detected records locally so the demo shows the automation loop.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function Dashboard() {
   const [data, setData] = useState<DashboardData>(sampleDashboardData);
   const [isLoading, setIsLoading] = useState(true);
@@ -551,6 +674,38 @@ export function Dashboard() {
     setStatusFilter("all");
   }, []);
 
+  const runReviewScan = useCallback(() => {
+    const existingJobIds = new Set(data.jobs.map((job) => job.id));
+    const newlyDetectedJobs = reviewScanJobs.filter((job) => !existingJobIds.has(job.id));
+    const now = new Date().toISOString();
+
+    setData((currentData) => ({
+      ...currentData,
+      jobs: [...newlyDetectedJobs, ...currentData.jobs],
+      scanRuns: [
+        {
+          id: `review-scan-${Date.now()}`,
+          startedAt: now,
+          completedAt: now,
+          status: "completed",
+          companiesChecked: currentData.companies.filter((company) => company.active).length,
+          jobsFound: currentData.jobs.length + newlyDetectedJobs.length,
+          newJobsAdded: newlyDetectedJobs.length,
+          errors: [],
+        },
+        ...currentData.scanRuns,
+      ],
+    }));
+
+    setMessage(
+      newlyDetectedJobs.length > 0
+        ? `Review scan completed. Added ${newlyDetectedJobs.length} newly detected roles locally.`
+        : "Review scan completed. No duplicate roles were added.",
+    );
+    setStatusFilter("all");
+    setSearchQuery("");
+  }, [data.jobs]);
+
   if (isLoading) {
     return <LoadingState />;
   }
@@ -625,6 +780,13 @@ export function Dashboard() {
           value={latestScan ? formatDateTime(latestScan.completedAt) : "None"}
         />
       </section>
+
+      <AutomationPanel
+        companies={data.companies}
+        jobs={jobs}
+        latestScan={latestScan}
+        onRunReviewScan={runReviewScan}
+      />
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(360px,0.85fr)]">
         <section className="min-w-0 rounded-lg border border-slate-200 bg-white shadow-soft">

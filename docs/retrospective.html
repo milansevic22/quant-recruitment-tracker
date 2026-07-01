@@ -40,7 +40,9 @@
           <ul>
             <li>The documentation-first sequence kept product scope, architecture, and deployment expectations explicit.</li>
             <li>The dashboard remains useful without Firebase credentials because it falls back to realistic sample data and supports review-mode interactions.</li>
+            <li>The automation center makes the monitoring loop visible to a non-technical reviewer.</li>
             <li>Admin-only writes are isolated behind protected Next.js routes.</li>
+            <li>Scheduled scanning is wired through a secured Vercel Cron route.</li>
             <li>The scanner records failures per company, which keeps partial scans reviewable.</li>
           </ul>
         </article>
@@ -49,10 +51,11 @@
           <h2>Intentionally Simple</h2>
           <ul>
             <li>Single dashboard page rather than a multi-route admin system.</li>
-            <li>Manual protected scan route instead of scheduled jobs by default.</li>
+            <li>Cron is configured, but it only becomes live after Vercel environment variables are added.</li>
             <li>Simple keyword matching instead of ranking or NLP.</li>
             <li>Best-effort public-page parsing only.</li>
             <li>Status changes are local in review mode until authenticated writes are added.</li>
+            <li>The review scan is intentionally local sample behavior until Firebase credentials are configured.</li>
           </ul>
         </article>
 
@@ -70,9 +73,10 @@
         <article class="card">
           <h2>Next Improvements</h2>
           <ul>
-            <li>Add Vercel Cron after scanner behavior is reviewed.</li>
+            <li>Review Vercel Cron logs after the first scheduled production scan.</li>
             <li>Add Resend alerts for newly discovered jobs.</li>
             <li>Add authenticated status updates for applied and ignored jobs.</li>
+            <li>Persist the review-scan workflow through Firestore once Firebase credentials and rules are installed.</li>
             <li>Add per-company adapters for high-value job boards that expose stable APIs.</li>
             <li>Add filters for role type, location, company, and status.</li>
           </ul>

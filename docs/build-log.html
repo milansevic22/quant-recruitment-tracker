@@ -44,7 +44,10 @@
             <li>Add initial companies, realistic sample jobs, and mock fallback data.</li>
             <li>Build a responsive dashboard with summary cards, role table, company list, scan panel, loading, error, and empty states.</li>
             <li>Add review-mode interactions for searching, filtering, and local job-status updates.</li>
+            <li>Expand the sample monitoring index to 18 firms, 24 seeded roles, multiple scan runs, and review-scan additions.</li>
+            <li>Add an automation center with watched source count, indexed posting count, scan cadence, scanner safety, and pipeline visibility.</li>
             <li>Add protected <code>/api/seed</code> and <code>/api/scan</code> routes.</li>
+            <li>Add secured <code>/api/cron/scan</code> route and <code>vercel.json</code> daily cron configuration.</li>
             <li>Add a safe careers-page scanner using gentle public-page fetches and keyword parsing.</li>
             <li>Update documentation after implementation and verification.</li>
           </ol>
@@ -55,11 +58,12 @@
             <h2>Key Files</h2>
             <ul>
               <li><code>components/dashboard.tsx</code> - dashboard UI and Firestore fallback loading.</li>
-              <li><code>lib/mock-data.ts</code> - initial companies and sample jobs.</li>
+              <li><code>lib/mock-data.ts</code> - tracked firms, sample jobs, scan history, and review scan jobs.</li>
               <li><code>lib/firebase/client.ts</code> - browser-safe Firebase setup.</li>
               <li><code>lib/firebase/admin.ts</code> - server-only Admin SDK setup.</li>
               <li><code>lib/scanner/scanner.ts</code> - safe public careers-page scanning.</li>
               <li><code>app/api/seed/route.ts</code> and <code>app/api/scan/route.ts</code> - protected admin routes.</li>
+              <li><code>app/api/cron/scan/route.ts</code> and <code>vercel.json</code> - scheduled scan support.</li>
             </ul>
           </article>
 

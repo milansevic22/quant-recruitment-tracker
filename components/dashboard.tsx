@@ -663,7 +663,7 @@ export function Dashboard() {
       ),
     }));
     setMessage(
-      "Status updated for this review session. Persisting status changes is the next authenticated Firebase write step.",
+      "Status updated for this review session. Persisted status updates are available through the protected admin API route.",
     );
   }, []);
 

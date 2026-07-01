@@ -71,6 +71,7 @@ export function normalizeJob(id: string, data: Record<string, unknown>): Job {
     sourceUrl: typeof data.sourceUrl === "string" ? data.sourceUrl : "",
     firstSeenAt: toIsoString(data.firstSeenAt as FirestoreDateValue),
     lastSeenAt: toIsoString(data.lastSeenAt as FirestoreDateValue),
+    updatedAt: toIsoString(data.updatedAt as FirestoreDateValue),
     status:
       data.status === "seen" ||
       data.status === "applied" ||

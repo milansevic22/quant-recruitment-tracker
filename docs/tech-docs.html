@@ -66,9 +66,10 @@
             current browser session.
           </p>
           <p>
-            Local status changes are intentionally not written to Firestore yet.
-            Persisting those changes should be added with authentication and
-            Firestore write rules in a later production iteration.
+            Persisted status updates are supported through the protected
+            <code>PATCH /api/jobs/:jobId/status</code> route. The public
+            dashboard keeps the dropdown local so the admin secret is never
+            exposed in browser code.
           </p>
         </article>
 
@@ -173,6 +174,11 @@
                 <td>Runs the public careers-page scanner and stores scan results.</td>
                 <td>Requires <code>x-admin-secret</code> matching <code>ADMIN_API_SECRET</code>.</td>
               </tr>
+              <tr>
+                <td><code>PATCH /api/jobs/:jobId/status</code></td>
+                <td>Persists a review status of <code>new</code>, <code>seen</code>, <code>applied</code>, or <code>ignored</code>.</td>
+                <td>Requires <code>x-admin-secret</code> matching <code>ADMIN_API_SECRET</code>.</td>
+              </tr>
             </tbody>
           </table>
         </article>
@@ -198,7 +204,8 @@
               The sample-data mode is intentional. It lets a reviewer open the
               app immediately without Firebase credentials, while still seeing
               the dashboard experience, filters, external links, and local
-              review controls. The sample index now includes a broader set of
+              review controls. Admin-only persistence remains available through
+              protected server routes. The sample index now includes a broader set of
               quant firms and hedge funds so the product feels closer to a real
               monitoring workflow.
             </p>

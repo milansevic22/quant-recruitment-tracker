@@ -47,6 +47,7 @@
             <li>Expand the sample monitoring index to 18 firms, 24 seeded roles, multiple scan runs, and review-scan additions.</li>
             <li>Add an automation center with watched source count, indexed posting count, scan cadence, scanner safety, and pipeline visibility.</li>
             <li>Add protected <code>/api/seed</code> and <code>/api/scan</code> routes.</li>
+            <li>Add protected <code>/api/jobs/:jobId/status</code> route for persisted review decisions.</li>
             <li>Add secured <code>/api/cron/scan</code> route and <code>vercel.json</code> daily cron configuration.</li>
             <li>Add verified Greenhouse API adapters for Jane Street and Optiver US.</li>
             <li>Add optional Resend email alert support for newly inserted jobs.</li>
@@ -67,6 +68,7 @@
               <li><code>lib/firebase/admin.ts</code> - server-only Admin SDK setup.</li>
               <li><code>lib/scanner/scanner.ts</code> - safe public careers-page scanning.</li>
               <li><code>app/api/seed/route.ts</code> and <code>app/api/scan/route.ts</code> - protected admin routes.</li>
+              <li><code>app/api/jobs/[jobId]/status/route.ts</code> - protected persisted status updates.</li>
               <li><code>app/api/cron/scan/route.ts</code> and <code>vercel.json</code> - scheduled scan support.</li>
               <li><code>firestore.rules</code> - read-only client rules for dashboard collections.</li>
             </ul>

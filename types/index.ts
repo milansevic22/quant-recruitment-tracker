@@ -31,6 +31,7 @@ export interface Job {
   sourceUrl: string;
   firstSeenAt: string;
   lastSeenAt: string;
+  updatedAt?: string;
   status: JobStatus;
   keywordsMatched: string[];
   roleType: RoleType;

@@ -59,7 +59,7 @@
               </tr>
               <tr>
                 <td>Firebase Admin SDK</td>
-                <td>Privileged server-side writes for seed and scan routes.</td>
+                <td>Privileged server-side writes for seed, scan, cron, and status-update routes.</td>
               </tr>
               <tr>
                 <td>Scanner module</td>
@@ -74,6 +74,7 @@
           <ul>
             <li>The browser never receives Firebase private key material.</li>
             <li>Admin routes require <code>ADMIN_API_SECRET</code>.</li>
+            <li>Status persistence goes through a protected server route rather than open browser writes.</li>
             <li>Dashboard reads fall back to sample data when Firebase is absent.</li>
             <li>Scanner failures are saved in scan-run records for review.</li>
           </ul>
@@ -82,8 +83,8 @@
         <article class="callout">
           <h2>Future Architecture Extension</h2>
           <p>
-            Vercel Cron can call the scan route on a schedule once production
-            environment variables are configured. Resend alerts can notify a
+            Vercel Cron calls the secured cron route on a daily schedule once
+            production environment variables are configured. Resend alerts can notify a
             reviewer when new jobs are inserted, provided Resend credentials and
             a recipient email are configured.
           </p>

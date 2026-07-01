@@ -23,6 +23,8 @@ writes, and Vercel-compatible deployment.
 ```text
 app/
   api/
+    cron/
+    jobs/
     scan/
     seed/
   globals.css
@@ -120,6 +122,11 @@ curl -X POST http://localhost:3000/api/seed \
 
 curl -X POST http://localhost:3000/api/scan \
   -H "x-admin-secret: your-secret"
+
+curl -X PATCH http://localhost:3000/api/jobs/JOB_ID/status \
+  -H "x-admin-secret: your-secret" \
+  -H "content-type: application/json" \
+  -d '{"status":"applied"}'
 ```
 
 Production uses the same header with the deployed domain:
@@ -130,6 +137,11 @@ curl -X POST https://your-domain.vercel.app/api/seed \
 
 curl -X POST https://your-domain.vercel.app/api/scan \
   -H "x-admin-secret: your-secret"
+
+curl -X PATCH https://your-domain.vercel.app/api/jobs/JOB_ID/status \
+  -H "x-admin-secret: your-secret" \
+  -H "content-type: application/json" \
+  -d '{"status":"applied"}'
 ```
 
 Scheduled scans are handled by Vercel Cron:
@@ -152,9 +164,8 @@ in UTC.
 
 Deploy the app to Vercel with the default Next.js settings. Add the same
 environment variables in the Vercel project settings before calling protected
-API routes.
-
-Vercel Cron can be added later to call `/api/scan` on a schedule.
+API routes. The included `vercel.json` wires Vercel Cron to the secured
+`/api/cron/scan` route.
 
 ## Tech Docs
 
@@ -178,6 +189,8 @@ Completed MVP:
   history, loading states, error states, and empty states.
 - Dashboard review mode supports search, company/type/status filters, external
   job links, refresh, and local job-status updates.
+- Protected job-status updates can persist review decisions through
+  `PATCH /api/jobs/:jobId/status`.
 - Automation center shows watched sources, indexed postings, scan cadence,
   scanner safety, and a visible fetch-match-record pipeline.
 - Review-mode scan button adds newly detected roles locally so the deployed app
@@ -193,6 +206,8 @@ Completed MVP:
 - Seed route populates initial companies and sample jobs without duplicate job
   inserts.
 - Scanner performs gentle public-page checks and records per-company errors.
+- Firestore rules are checked in so the intended read/write boundary is visible
+  in the repository.
 
 Verification completed:
 
@@ -216,6 +231,6 @@ a machine where npm is installed.
 ## Future Improvements
 
 - Review Vercel Cron logs after enabling scheduled scans.
-- Add authenticated status updates for applied or ignored roles.
+- Add a login-based admin UI for persisted status updates instead of using curl.
 - Add per-company scanner adapters for high-value sources.
-- Add richer filtering, saved views, and export support.
+- Add saved views and export support.

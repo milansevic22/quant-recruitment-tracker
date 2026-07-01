@@ -56,7 +56,7 @@
             <li>Cron is configured, but it only becomes live after Vercel environment variables are added.</li>
             <li>Simple keyword matching instead of ranking or NLP.</li>
             <li>Best-effort public-page parsing only.</li>
-            <li>Status changes are local in review mode until authenticated writes are added.</li>
+            <li>The public dashboard keeps status changes local, while persisted changes use a protected admin route.</li>
             <li>The review scan is intentionally local sample behavior until Firebase credentials are configured.</li>
             <li>Email alerts depend on Resend account setup and sender verification.</li>
           </ul>
@@ -68,8 +68,8 @@
             <li>Some careers pages use dynamic rendering or third-party boards.</li>
             <li>Locations may be incomplete when not visible in link text.</li>
             <li>Manual verification remains necessary before applying.</li>
-            <li>Notification support is left for a later iteration.</li>
-            <li>Firestore rules still need to be configured for the chosen review or production access model.</li>
+            <li>Notification delivery still needs a real Resend account and sender verification.</li>
+            <li>Firestore rules need to stay aligned with the chosen review or production access model.</li>
           </ul>
         </article>
 
@@ -78,10 +78,10 @@
           <ul>
             <li>Review Vercel Cron logs after the first scheduled production scan.</li>
             <li>Send a live test email after adding Resend credentials.</li>
-            <li>Add authenticated status updates for applied and ignored jobs.</li>
+            <li>Add a login-based admin UI for persisted status updates.</li>
             <li>Persist the review-scan workflow through Firestore once Firebase credentials and rules are installed.</li>
             <li>Add per-company adapters for high-value job boards that expose stable APIs.</li>
-            <li>Add filters for role type, location, company, and status.</li>
+            <li>Add saved views, export support, and richer company-level analytics.</li>
           </ul>
         </article>
 

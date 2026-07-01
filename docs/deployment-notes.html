@@ -85,6 +85,11 @@ ALERT_EMAIL_FROM=</code></pre>
           <p>Production calls use the same headers with the Vercel domain.</p>
           <pre><code>curl -X POST https://your-domain.vercel.app/api/seed \
   -H "x-admin-secret: your-secret"</code></pre>
+          <p>Production status update:</p>
+          <pre><code>curl -X PATCH https://your-domain.vercel.app/api/jobs/JOB_ID/status \
+  -H "x-admin-secret: your-secret" \
+  -H "content-type: application/json" \
+  -d '{"status":"applied"}'</code></pre>
         </article>
 
         <article class="card">
@@ -127,7 +132,8 @@ ALERT_EMAIL_FROM=</code></pre>
           <p>
             Cron configuration is included. It becomes live after the project is
             redeployed on Vercel with <code>CRON_SECRET</code> and Firebase
-            credentials configured.
+            credentials configured. The first scheduled production run should be
+            checked in Vercel function logs.
           </p>
         </article>
       </section>

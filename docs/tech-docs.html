@@ -67,9 +67,10 @@
           </p>
           <p>
             Persisted status updates are supported through the protected
-            <code>PATCH /api/jobs/:jobId/status</code> route. The public
-            dashboard keeps the dropdown local so the admin secret is never
-            exposed in browser code.
+            <code>PATCH /api/jobs/:jobId/status</code> route. When an admin
+            secret is entered in the dashboard, status changes are sent through
+            that route and saved to Firestore. Without the secret, the dropdown
+            remains a local review control.
           </p>
         </article>
 
@@ -84,9 +85,10 @@
             live Firebase credentials.
           </p>
           <p>
-            In production mode, the same concept maps to the protected
-            <code>/api/scan</code> route, Firestore writes, and optional Vercel
-            Cron scheduling.
+            In production mode, the admin controls call the protected
+            <code>/api/seed</code> and <code>/api/scan</code> routes from the
+            dashboard after the reviewer enters the admin secret for that
+            browser session. Vercel Cron uses the same scanner automatically.
           </p>
         </article>
 
@@ -115,6 +117,11 @@
             which is more reliable than scraping JavaScript-rendered careers
             pages. The scanner still falls back to safe HTML parsing for firms
             where no stable public ATS feed has been added yet.
+          </p>
+          <p>
+            Live verification on July 6, 2026 confirmed that Optiver US returned
+            195 public jobs and Jane Street returned 200 public jobs from those
+            Greenhouse feeds.
           </p>
         </article>
 
@@ -193,7 +200,7 @@
             <li>It parses links from the HTML and checks for role keywords such as <code>quant</code>, <code>trading</code>, <code>intern</code>, <code>graduate</code>, <code>research</code>, and <code>software</code>.</li>
             <li>It creates job records with deterministic IDs so duplicate title and URL combinations are avoided.</li>
             <li>It stores a <code>scanRuns</code> record with companies checked, jobs found, new jobs added, and errors.</li>
-            <li>If Resend is configured, it emails newly inserted jobs.</li>
+            <li>If Resend is configured, it emails newly inserted jobs and records the alert count.</li>
           </ol>
         </article>
 
@@ -205,7 +212,8 @@
               app immediately without Firebase credentials, while still seeing
               the dashboard experience, filters, external links, and local
               review controls. Admin-only persistence remains available through
-              protected server routes. The sample index now includes a broader set of
+              protected server routes and the session-secret admin controls. The
+              sample index now includes a broader set of
               quant firms and hedge funds so the product feels closer to a real
               monitoring workflow.
             </p>
@@ -235,8 +243,9 @@
           <p>
             This page is the best place to explain the technical side. Say that
             the frontend is reviewable immediately with sample data, Firebase is
-            the intended source of truth, and protected server routes handle the
-            sensitive write operations.
+            the source of truth in production, protected server routes handle
+            sensitive writes, and the admin secret unlocks seed, scan, and
+            persisted status operations without hard-coding secrets.
           </p>
         </article>
       </section>

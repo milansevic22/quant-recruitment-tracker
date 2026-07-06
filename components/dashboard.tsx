@@ -54,6 +54,15 @@ const ROLE_TYPES: RoleType[] = [
   "other",
 ];
 
+type AdminAction = "seed" | "scan";
+
+interface AdminRoutePayload {
+  ok?: boolean;
+  error?: string;
+  message?: string;
+  result?: Record<string, unknown>;
+}
+
 function formatDateTime(value: string): string {
   if (!value) {
     return "Not available";
@@ -73,6 +82,11 @@ function formatDateTime(value: string): string {
 
 function formatRoleType(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function getResultNumber(payload: AdminRoutePayload, key: string): number | undefined {
+  const value = payload.result?.[key];
+  return typeof value === "number" ? value : undefined;
 }
 
 function sortByNewest<T extends { firstSeenAt?: string; startedAt?: string }>(
@@ -337,8 +351,7 @@ function JobFilters({
         </button>
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Showing {resultCount} of {totalCount} roles. Status changes update this
-        review session locally.
+        Showing {resultCount} of {totalCount} roles.
       </p>
     </div>
   );
@@ -424,7 +437,7 @@ function ScanRunPanel({ scanRuns }: { scanRuns: ScanRun[] }) {
             {formatDateTime(latestScan.completedAt)}
           </span>
         </div>
-        <dl className="grid grid-cols-3 gap-3 text-sm">
+        <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
             <dt className="text-slate-500">Checked</dt>
             <dd className="mt-1 text-lg font-semibold text-slate-950">
@@ -441,6 +454,12 @@ function ScanRunPanel({ scanRuns }: { scanRuns: ScanRun[] }) {
             <dt className="text-slate-500">New</dt>
             <dd className="mt-1 text-lg font-semibold text-slate-950">
               {latestScan.newJobsAdded}
+            </dd>
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <dt className="text-slate-500">Alerts</dt>
+            <dd className="mt-1 text-lg font-semibold text-slate-950">
+              {latestScan.notificationsSent ?? 0}
             </dd>
           </div>
         </dl>
@@ -462,15 +481,25 @@ function ScanRunPanel({ scanRuns }: { scanRuns: ScanRun[] }) {
 }
 
 function AutomationPanel({
+  adminAction,
+  adminSecret,
   companies,
   jobs,
   latestScan,
+  onAdminSecretChange,
+  onRunLiveScan,
   onRunReviewScan,
+  onSeedFirebase,
 }: {
+  adminAction: AdminAction | null;
+  adminSecret: string;
   companies: TrackedCompany[];
   jobs: Job[];
   latestScan?: ScanRun;
+  onAdminSecretChange: (value: string) => void;
+  onRunLiveScan: () => void;
   onRunReviewScan: () => void;
+  onSeedFirebase: () => void;
 }) {
   const activeCompanies = companies.filter((company) => company.active);
   const uniqueLocations = new Set(jobs.map((job) => job.location).filter(Boolean));
@@ -487,17 +516,28 @@ function AutomationPanel({
             </span>
           </div>
           <p className="mt-1 text-sm text-slate-500">
-            Safe public-page monitoring with review-mode scan simulation.
+            Live public-source monitoring with protected admin actions.
           </p>
         </div>
-        <button
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-teal-700 bg-teal-700 px-3 text-sm font-semibold text-white shadow-soft hover:bg-teal-800"
-          onClick={onRunReviewScan}
-          type="button"
-        >
-          <Play className="h-4 w-4" aria-hidden="true" />
-          Run review scan
-        </button>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <button
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 shadow-soft hover:bg-slate-50"
+            onClick={onRunReviewScan}
+            type="button"
+          >
+            <Play className="h-4 w-4" aria-hidden="true" />
+            Review scan
+          </button>
+          <button
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-teal-700 bg-teal-700 px-3 text-sm font-semibold text-white shadow-soft hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={adminAction !== null}
+            onClick={onRunLiveScan}
+            type="button"
+          >
+            <Radar className="h-4 w-4" aria-hidden="true" />
+            {adminAction === "scan" ? "Scanning..." : "Run live scan"}
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-4">
@@ -527,7 +567,7 @@ function AutomationPanel({
             Scan cadence
           </div>
           <p className="mt-3 text-2xl font-semibold text-slate-950">Daily</p>
-          <p className="mt-1 text-xs text-slate-500">Manual now, Cron-ready later</p>
+          <p className="mt-1 text-xs text-slate-500">Manual or Vercel Cron</p>
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
@@ -575,6 +615,30 @@ function AutomationPanel({
           </p>
         </div>
       </div>
+
+      <div className="grid gap-3 border-t border-slate-200 bg-slate-50 px-5 py-4 lg:grid-cols-[minmax(220px,1fr)_auto] lg:items-center">
+        <label className="block">
+          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Admin secret
+          </span>
+          <input
+            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            onChange={(event) => onAdminSecretChange(event.target.value)}
+            placeholder="Paste admin secret for live actions"
+            type="password"
+            value={adminSecret}
+          />
+        </label>
+        <button
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={adminAction !== null}
+          onClick={onSeedFirebase}
+          type="button"
+        >
+          <Database className="h-4 w-4" aria-hidden="true" />
+          {adminAction === "seed" ? "Seeding..." : "Seed Firebase"}
+        </button>
+      </div>
     </section>
   );
 }
@@ -588,6 +652,8 @@ export function Dashboard() {
   const [companyFilter, setCompanyFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [adminSecret, setAdminSecret] = useState("");
+  const [adminAction, setAdminAction] = useState<AdminAction | null>(null);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -650,22 +716,146 @@ export function Dashboard() {
   const newJobs = jobs.filter((job) => job.status === "new");
   const latestScan = scanRuns[0];
 
-  const updateJobStatus = useCallback((jobId: string, status: JobStatus) => {
-    setData((currentData) => ({
-      ...currentData,
-      jobs: currentData.jobs.map((job) =>
-        job.id === jobId
-          ? {
-              ...job,
-              status,
-            }
-          : job,
-      ),
-    }));
-    setMessage(
-      "Status updated for this review session. Persisted status updates are available through the protected admin API route.",
-    );
-  }, []);
+  const runProtectedPost = useCallback(
+    async (
+      path: string,
+      action: AdminAction,
+      buildMessage: (payload: AdminRoutePayload) => string,
+    ) => {
+      const secret = adminSecret.trim();
+
+      if (!secret) {
+        setError("Enter the admin secret before running a protected action.");
+        return;
+      }
+
+      setAdminAction(action);
+      setError(null);
+      setMessage(null);
+
+      try {
+        const response = await fetch(path, {
+          method: "POST",
+          headers: {
+            "x-admin-secret": secret,
+          },
+        });
+        const payload = (await response
+          .json()
+          .catch(() => ({}))) as AdminRoutePayload;
+
+        if (!response.ok || payload.ok === false) {
+          throw new Error(payload.error ?? `Request failed with HTTP ${response.status}.`);
+        }
+
+        await loadData();
+        setMessage(buildMessage(payload));
+      } catch (actionError) {
+        setError(
+          actionError instanceof Error
+            ? actionError.message
+            : "Protected action failed.",
+        );
+      } finally {
+        setAdminAction(null);
+      }
+    },
+    [adminSecret, loadData],
+  );
+
+  const seedFirebase = useCallback(() => {
+    void runProtectedPost("/api/seed", "seed", (payload) => {
+      const companiesUpserted = getResultNumber(payload, "companiesUpserted");
+      const jobsAdded = getResultNumber(payload, "jobsAdded");
+
+      if (companiesUpserted !== undefined && jobsAdded !== undefined) {
+        return `Firebase seeded. ${companiesUpserted} companies upserted and ${jobsAdded} jobs added.`;
+      }
+
+      return payload.message ?? "Firebase seed completed.";
+    });
+  }, [runProtectedPost]);
+
+  const runLiveScan = useCallback(() => {
+    void runProtectedPost("/api/scan", "scan", (payload) => {
+      const newJobsAdded = getResultNumber(payload, "newJobsAdded") ?? 0;
+      const notificationsSent = getResultNumber(payload, "notificationsSent") ?? 0;
+
+      return `Live scan completed. Added ${newJobsAdded} new jobs and sent ${notificationsSent} alert email${notificationsSent === 1 ? "" : "s"}.`;
+    });
+  }, [runProtectedPost]);
+
+  const updateJobStatus = useCallback(
+    (jobId: string, status: JobStatus) => {
+      const previousStatus = data.jobs.find((job) => job.id === jobId)?.status;
+      const secret = adminSecret.trim();
+
+      setData((currentData) => ({
+        ...currentData,
+        jobs: currentData.jobs.map((job) =>
+          job.id === jobId
+            ? {
+                ...job,
+                status,
+              }
+            : job,
+        ),
+      }));
+
+      if (data.mode !== "firebase" || !secret) {
+        setMessage(
+          "Status updated for this review session. Enter the admin secret to persist Firebase status changes.",
+        );
+        return;
+      }
+
+      void (async () => {
+        try {
+          const response = await fetch(
+            `/api/jobs/${encodeURIComponent(jobId)}/status`,
+            {
+              method: "PATCH",
+              headers: {
+                "content-type": "application/json",
+                "x-admin-secret": secret,
+              },
+              body: JSON.stringify({ status }),
+            },
+          );
+          const payload = (await response
+            .json()
+            .catch(() => ({}))) as AdminRoutePayload;
+
+          if (!response.ok || payload.ok === false) {
+            throw new Error(payload.error ?? `Request failed with HTTP ${response.status}.`);
+          }
+
+          setMessage(`Status saved to Firebase as ${status}.`);
+        } catch (statusError) {
+          if (previousStatus) {
+            setData((currentData) => ({
+              ...currentData,
+              jobs: currentData.jobs.map((job) =>
+                job.id === jobId
+                  ? {
+                      ...job,
+                      status: previousStatus,
+                    }
+                  : job,
+              ),
+            }));
+          }
+
+          setError(
+            statusError instanceof Error
+              ? statusError.message
+              : "Status update failed.",
+          );
+        }
+      })();
+    },
+    [adminSecret, data.jobs, data.mode],
+  );
 
   const resetFilters = useCallback(() => {
     setSearchQuery("");
@@ -782,10 +972,15 @@ export function Dashboard() {
       </section>
 
       <AutomationPanel
+        adminAction={adminAction}
+        adminSecret={adminSecret}
         companies={data.companies}
         jobs={jobs}
         latestScan={latestScan}
+        onAdminSecretChange={setAdminSecret}
+        onRunLiveScan={runLiveScan}
         onRunReviewScan={runReviewScan}
+        onSeedFirebase={seedFirebase}
       />
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(360px,0.85fr)]">

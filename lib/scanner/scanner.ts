@@ -327,6 +327,7 @@ export async function runCareersScan(db: Firestore): Promise<CareersScanResult> 
     companiesChecked: companies.length,
     jobsFound: allJobs.length,
     newJobsAdded,
+    notificationsSent,
     errors,
   };
 

@@ -82,7 +82,7 @@ ADMIN_API_SECRET=
 CRON_SECRET=
 ```
 
-Optional future notification support:
+Optional notification support:
 
 ```bash
 RESEND_API_KEY=
@@ -188,13 +188,18 @@ Completed MVP:
 - Dashboard renders summary cards, discovered roles, tracked companies, scan
   history, loading states, error states, and empty states.
 - Dashboard review mode supports search, company/type/status filters, external
-  job links, refresh, and local job-status updates.
+  job links, refresh, local job-status updates, and admin-enabled persisted
+  status updates.
 - Protected job-status updates can persist review decisions through
   `PATCH /api/jobs/:jobId/status`.
 - Automation center shows watched sources, indexed postings, scan cadence,
-  scanner safety, and a visible fetch-match-record pipeline.
+  scanner safety, protected seed/scan controls, and a visible
+  fetch-match-record pipeline.
 - Review-mode scan button adds newly detected roles locally so the deployed app
   demonstrates the automated monitoring loop without Firebase credentials.
+- Admin mode lets a reviewer paste the admin secret into the dashboard session,
+  seed Firestore, run the live scanner, and persist status decisions without
+  exposing the secret in source code.
 - Production scanner includes verified Greenhouse API adapters for Jane Street
   and Optiver US before falling back to public HTML parsing for other firms.
 - Optional Resend alerts email newly inserted jobs when `RESEND_API_KEY` and
@@ -214,6 +219,8 @@ Verification completed:
 - `pnpm lint`
 - `pnpm typecheck`
 - `pnpm build`
+- Live Greenhouse feed check on July 6, 2026: Optiver US returned 195 public
+  jobs and Jane Street returned 200 public jobs.
 - Browser checks at `http://localhost:3000` for desktop and mobile layout
 
 The local shell did not expose `npm`, so verification used the bundled Node and
@@ -231,6 +238,7 @@ a machine where npm is installed.
 ## Future Improvements
 
 - Review Vercel Cron logs after enabling scheduled scans.
-- Add a login-based admin UI for persisted status updates instead of using curl.
+- Replace the session-secret admin controls with Firebase Auth or another
+  login-based reviewer flow.
 - Add per-company scanner adapters for high-value sources.
 - Add saved views and export support.

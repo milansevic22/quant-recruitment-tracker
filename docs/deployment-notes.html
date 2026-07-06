@@ -76,6 +76,13 @@ ALERT_EMAIL_FROM=</code></pre>
 
         <article class="card">
           <h2>Protected Route Calls</h2>
+          <p>
+            The deployed dashboard includes admin controls for these actions.
+            Paste the admin secret into the dashboard session, then use
+            <code>Seed Firebase</code>, <code>Run live scan</code>, or the job
+            status dropdown. The curl examples below are useful for testing the
+            same routes directly.
+          </p>
           <p>Local seed:</p>
           <pre><code>curl -X POST http://localhost:3000/api/seed \
   -H "x-admin-secret: your-secret"</code></pre>

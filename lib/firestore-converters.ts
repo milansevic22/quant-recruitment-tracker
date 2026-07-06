@@ -105,6 +105,8 @@ export function normalizeScanRun(id: string, data: Record<string, unknown>): Sca
     companiesChecked: typeof data.companiesChecked === "number" ? data.companiesChecked : 0,
     jobsFound: typeof data.jobsFound === "number" ? data.jobsFound : 0,
     newJobsAdded: typeof data.newJobsAdded === "number" ? data.newJobsAdded : 0,
+    notificationsSent:
+      typeof data.notificationsSent === "number" ? data.notificationsSent : undefined,
     errors: scanErrors(data.errors),
   };
 }

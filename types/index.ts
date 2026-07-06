@@ -52,6 +52,7 @@ export interface ScanRun {
   companiesChecked: number;
   jobsFound: number;
   newJobsAdded: number;
+  notificationsSent?: number;
   errors: ScanRunError[];
 }
 

@@ -255,10 +255,9 @@ function buildAlertHtml(newJobs: Job[]): string {
 async function sendNewJobAlert(newJobs: Job[]): Promise<number> {
   const resendApiKey = process.env.RESEND_API_KEY;
   const alertTo = process.env.ALERT_EMAIL_TO;
-  const alertFrom =
-    process.env.ALERT_EMAIL_FROM ?? "Quant Recruitment Tracker <onboarding@resend.dev>";
+  const alertFrom = process.env.ALERT_EMAIL_FROM;
 
-  if (!resendApiKey || !alertTo || newJobs.length === 0) {
+  if (!resendApiKey || !alertTo || !alertFrom || newJobs.length === 0) {
     return 0;
   }
 

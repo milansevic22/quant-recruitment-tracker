@@ -202,8 +202,8 @@ Completed MVP:
   exposing the secret in source code.
 - Production scanner includes verified Greenhouse API adapters for Jane Street
   and Optiver US before falling back to public HTML parsing for other firms.
-- Optional Resend alerts email newly inserted jobs when `RESEND_API_KEY` and
-  `ALERT_EMAIL_TO` are configured.
+- Optional Resend alerts email newly inserted jobs when `RESEND_API_KEY`,
+  `ALERT_EMAIL_TO`, and verified `ALERT_EMAIL_FROM` are configured.
 - Firebase client reads are used when browser-safe credentials are configured.
 - Sample fallback data renders when Firebase credentials are missing or reads
   fail.
@@ -233,7 +233,7 @@ a machine where npm is installed.
 - It does not bypass bot protection, logins, CAPTCHAs, paywalls, or site
   restrictions.
 - Dynamic careers pages and third-party job boards may require manual review.
-- Email alerts require a Resend API key and a valid sender address.
+- Email alerts require a Resend API key and a verified sender address.
 
 ## Future Improvements
 

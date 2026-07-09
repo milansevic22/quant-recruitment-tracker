@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Activity,
   AlertCircle,
   ArrowUpRight,
   BriefcaseBusiness,
@@ -9,12 +8,14 @@ import {
   CalendarClock,
   Clock3,
   Database,
+  FileText,
   Play,
   Radar,
   RefreshCw,
   Search,
   ShieldCheck,
 } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   collection,
@@ -919,14 +920,23 @@ export function Dashboard() {
               trading, research, and software roles.
             </p>
           </div>
-          <button
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 shadow-soft hover:bg-slate-50"
-            onClick={() => void loadData()}
-            type="button"
-          >
-            <RefreshCw className="h-4 w-4" aria-hidden="true" />
-            Refresh
-          </button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Link
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 shadow-soft hover:bg-slate-50"
+              href="/tech-docs"
+            >
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              Tech docs
+            </Link>
+            <button
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 shadow-soft hover:bg-slate-50"
+              onClick={() => void loadData()}
+              type="button"
+            >
+              <RefreshCw className="h-4 w-4" aria-hidden="true" />
+              Refresh
+            </button>
+          </div>
         </div>
       </header>
 

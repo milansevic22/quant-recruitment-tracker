@@ -172,13 +172,12 @@ API routes. The included `vercel.json` wires Vercel Cron to the secured
 The technical walkthrough lives at:
 
 ```text
-docs/tech-docs.html
+/tech-docs
 ```
 
 It explains how the dashboard loads data, how Firebase client/Admin boundaries
-work, how the protected seed and scan routes are called, how the scanner avoids
-duplicates, and why the app falls back to sample data when credentials are
-missing.
+work, how protected routes are called, how the scanner avoids duplicates, how
+Vercel Cron and Resend fit in, and what the current scanner limitations are.
 
 ## Current MVP Status
 
